@@ -13,53 +13,6 @@ class Product(models.Model):
     vendor_code = models.CharField(max_length=255)
     description = models.TextField()
 
-class ProductOption(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='options')
-    name = models.CharField(max_length=255)
-    value = models.TextField()
-    charc_type = models.IntegerField()
-    is_variable = models.BooleanField(default=False)
-    variable_values = models.JSONField(null=True, blank=True)
-
-class ProductMedia(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='media')
-    has_video = models.BooleanField(default=False)
-    is_autoplaying_video = models.BooleanField(default=False)
-    photo_count = models.IntegerField()
-
-class ProductSelling(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='selling_info')
-    brand_name = models.CharField(max_length=255)
-    brand_hash = models.CharField(max_length=255)
-    supplier_id = models.IntegerField()
-
-class ProductComposition(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='compositions')
-    name = models.CharField(max_length=255)
-    percentage = models.CharField(max_length=255)
-
-class ProductSize(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sizes')
-    tech_size = models.CharField(max_length=50)
-    chrt_id = models.IntegerField()
-    size_details = models.JSONField()
-
-class ProductColor(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='colors')
-    nm_color_id = models.IntegerField()
-    color_name = models.CharField(max_length=255)
-
-class ProductCertificate(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='certificates')
-    verified = models.BooleanField(default=False)
-
 
 
 class ParseWB:

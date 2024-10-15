@@ -1,18 +1,19 @@
-from rest_framework import viewsets, status
+from rest_framework import status
 from .models import ParseWB, Product
 from .serializers import ProductParseSerializer, ProductSerializer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from celery import shared_task
 
-class ProductViewSet(viewsets.ViewSet):
-    def list(self, request):
+class ProductViewSet(APIView):
+    def get(self, request, format=None):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     
     @action(detail=False, methods=['post'])
-    def parse_product(self, request):
+    def post(self, request, format=None):
         serializer = ProductParseSerializer(data=request.data)
         if serializer.is_valid():
             nm_id = serializer.validated_data['nm_id']
