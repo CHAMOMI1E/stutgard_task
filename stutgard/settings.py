@@ -95,19 +95,9 @@ WSGI_APPLICATION = 'stutgard.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgres://postgres:02082002@localhost:5432/stutgard'
+        default='postgres://stutgard_user:stutgard_pass@db:5432/stutgard'
     )
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'stutgard',
-#         'USER': 'postgres',
-#         'PASSWORD': '02082002',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 
 # Password validation

@@ -59,5 +59,25 @@ class ParseWB:
     
     def parse(self):
         import requests
-        r = requests.get(url=f"https://basket-{self._get_basket()}.wbbasket.ru/vol{self.volume}/part{self.part}/{self.article}/info/ru/card.json")
-        print (r.json())
+        try:
+            r = requests.get(url=f"https://basket-{self._get_basket()}.wbbasket.ru/vol{self.volume}/part{self.part}/{self.article}/info/ru/card.json")
+            data = r.json()
+
+            product, created = Product.objects.update_or_create(
+                nm_id=self.article,
+                defaults={
+                    'imt_id': data.get('imt_id', 0),
+                    'imt_name': data.get('imt_name', ''),
+                    'slug': data.get('slug', ''),
+                    'subj_name': data.get('subj_name', ''),
+                    'subj_root_name': data.get('subj_root_name', ''),
+                    'vendor_code': data.get('vendor_code', ''),
+                    'description': data.get('description', '')
+                }
+            )
+            print(f"Product {'created' if created else 'updated'}: {product}")
+        
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
+        except ValueError:
+            print("Failed to parse JSON")

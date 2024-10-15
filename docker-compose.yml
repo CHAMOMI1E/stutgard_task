@@ -35,7 +35,7 @@ services:
 
   celery:
     build: .
-    command: poetry run celery -A api worker -l info
+    command: ['celery', 'worker', '-A', 'api', '-l', 'info'] 
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
