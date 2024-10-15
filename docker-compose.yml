@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    command: >
+      /bin/sh -c "poetry run python manage.py runserver 0.0.0.0:8000 && poetry run python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=stutgard
+      - POSTGRES_USER=stutgard_user
+      - POSTGRES_PASSWORD=stutgard_pass
+      - DATABASE_URL=postgres://stutgard_user:stutgard_pass@db:5432/stutgard
+    depends_on:
+      - db
+      - redis
+      - celery
+    volumes:
+      - .:/stutgard
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: stutgard
+      POSTGRES_USER: stutgard_user
+      POSTGRES_PASSWORD: stutgard_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+
+  celery:
+    build: .
+    command: poetry run celery -A stutgard worker -l info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - POSTGRES_DB=stutgard
+      - POSTGRES_USER=stutgard_user
+      - POSTGRES_PASSWORD=stutgard_pass
+      - DATABASE_URL=postgres://stutgard_user:stutgard_pass@db:5432/stutgard
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  postgres_data:
