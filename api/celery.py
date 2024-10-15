@@ -4,7 +4,7 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stutgard.settings')
 
-app = Celery('stutgard')
+app = Celery('api')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
